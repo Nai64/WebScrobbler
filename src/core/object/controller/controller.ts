@@ -6,6 +6,7 @@ import {
 	parseScrobblePercent,
 	getSecondsToScrobble,
 	isAnyResult,
+	SHORT_TRACK_THRESHOLD,
 } from '@/util/util';
 import Song from '@/core/object/song';
 import Timer from '@/core/object/timer';
@@ -24,6 +25,7 @@ import EventEmitter from '@/util/emitter';
 import * as BrowserStorage from '@/core/storage/browser-storage';
 import { debugLog } from '@/core/content/util';
 import scrobbleCache from '@/core/storage/scrobble-cache';
+import shortTrackCache from '@/core/storage/short-track-cache';
 import { ScrobbleStatus } from '@/core/storage/wrapper';
 import browser from 'webextension-polyfill';
 import type BaseConnector from '@/core/content/connector';
@@ -81,6 +83,7 @@ export default class Controller {
 	private isReplayingSong = false;
 	private shouldScrobblePodcasts = true;
 	private scrobbleCacheId: number | null = null;
+	private shortTrackCacheId: number | null = null;
 	private blocklist: Blocklist;
 	private isPaused = false;
 
@@ -906,6 +909,12 @@ export default class Controller {
 		this.shouldHaveScrobbled = false;
 		this.forceScrobble = false;
 
+		// Clear short track cache ID when resetting state
+		if (this.shortTrackCacheId) {
+			this.debugLog('Clearing short track cache ID on state reset');
+			this.shortTrackCacheId = null;
+		}
+
 		this.currentSong = null;
 	}
 
@@ -1027,6 +1036,14 @@ export default class Controller {
 				this.onModeChanged();
 			}
 		} else {
+			// Song paused or stopped - check if we need to scrobble a short track
+			if (this.shortTrackCacheId) {
+				this.debugLog(
+					'Short track stopped, attempting to scrobble from cache',
+				);
+				// Scrobble immediately when short track ends
+				void this.scrobbleShortTrackFromCache();
+			}
 			this.setPaused();
 		}
 	}
@@ -1091,6 +1108,25 @@ export default class Controller {
 	): Promise<void> {
 		if (this.playbackTimer.isExpired()) {
 			this.debugLog('Attempt to update expired timers', 'warn');
+			return;
+		}
+
+		// Check if this is a short track that needs special handling
+		if (
+			duration !== null &&
+			duration !== undefined &&
+			duration <= SHORT_TRACK_THRESHOLD &&
+			duration > 0
+		) {
+			this.debugLog(
+				`Short track detected (${duration}s), caching for delayed scrobble`,
+			);
+			await this.cacheShortTrack();
+			// Still set a timer but with a delay based on the threshold
+			// This ensures we try to scrobble after the track has had time to play
+			const scrobbleDelay = Math.max(1, duration);
+			this.playbackTimer.update(scrobbleDelay);
+			this.replayDetectionTimer.update(duration);
 			return;
 		}
 
@@ -1240,6 +1276,87 @@ export default class Controller {
 	}
 
 	/**
+	 * Cache a short track for delayed scrobbling.
+	 * This ensures tracks shorter than SHORT_TRACK_THRESHOLD get scrobbled properly
+	 * even if they finish playing before the scrobble timer triggers.
+	 */
+	private async cacheShortTrack(): Promise<void> {
+		if (!assertSongNotNull(this.currentSong)) {
+			return;
+		}
+
+		// Clear any existing short track cache ID
+		if (this.shortTrackCacheId) {
+			shortTrackCache.deleteShortTracks([this.shortTrackCacheId]);
+		}
+
+		// Cache the short track with timestamp
+		this.shortTrackCacheId = await shortTrackCache.pushShortTrack({
+			song: this.currentSong.getCloneableData(),
+			cachedAt: Date.now(),
+			scrobbledAt: null,
+		});
+
+		this.debugLog(
+			`Short track cached with ID ${this.shortTrackCacheId}`,
+		);
+	}
+
+	/**
+	 * Scrobble a short track from cache.
+	 * Updates the cache entry with scrobble timestamp.
+	 */
+	private async scrobbleShortTrackFromCache(): Promise<void> {
+		if (!this.shortTrackCacheId) {
+			return;
+		}
+
+		// Check if already scrobbled
+		const cache = await shortTrackCache.getShortTrackCacheStorageLocking();
+		if (!cache) {
+			return;
+		}
+
+		const cacheEntry = cache.find(
+			(entry) => entry.id === this.shortTrackCacheId,
+		);
+		if (!cacheEntry) {
+			this.shortTrackCacheId = null;
+			return;
+		}
+
+		// If already scrobbled, skip
+		if (cacheEntry.scrobbledAt !== null) {
+			this.shortTrackCacheId = null;
+			return;
+		}
+
+		// Attempt to scrobble
+		const results = await sendContentMessage({
+			type: 'scrobble',
+			payload: {
+				songs: [cacheEntry.song],
+				currentlyPlaying: false,
+			},
+		});
+
+		if (isAnyResult(results[0], ServiceCallResult.RESULT_OK)) {
+			this.debugLog('Short track scrobbled successfully from cache');
+
+			// Update cache entry with scrobble timestamp
+			await shortTrackCache.replaceShortTrack(this.shortTrackCacheId, {
+				song: cacheEntry.song,
+				cachedAt: cacheEntry.cachedAt,
+				scrobbledAt: Date.now(),
+			});
+
+			this.shortTrackCacheId = null;
+		} else {
+			this.debugLog('Failed to scrobble short track from cache', 'warn');
+		}
+	}
+
+	/**
 	 * Tries to save failed scrobble due to disallowed/unrecognized.
 	 *
 	 * @returns true if scrobble is failed; false if should scrobble
@@ -1275,6 +1392,13 @@ export default class Controller {
 	 */
 	private async scrobbleSong(): Promise<void> {
 		if (!assertSongNotNull(this.currentSong)) {
+			return;
+		}
+
+		// Check if this is a short track - use cache-based scrobbling instead
+		if (this.shortTrackCacheId) {
+			this.debugLog('Scrobbling short track from cache');
+			await this.scrobbleShortTrackFromCache();
 			return;
 		}
 

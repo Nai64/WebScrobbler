@@ -45,6 +45,13 @@ export const MIN_TRACK_DURATION = 0;
  */
 export const MAX_SCROBBLE_TIME = 240;
 
+/**
+ * Threshold in seconds for considering a track as "very short".
+ * Tracks at or below this duration will use the short track caching system
+ * to ensure they get scrobbled properly even if they finish playing quickly.
+ */
+export const SHORT_TRACK_THRESHOLD = 4;
+
 export type DebugLogType = 'log' | 'error' | 'warn' | 'info';
 
 /**

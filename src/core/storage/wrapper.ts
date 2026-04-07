@@ -12,6 +12,7 @@ import type {
 	OPTIONS,
 	REGEX_EDITS,
 	SCROBBLE_CACHE,
+	SHORT_TRACK_CACHE,
 	STATE_MANAGEMENT,
 	StorageNamespace,
 	BLOCKLISTS,
@@ -150,6 +151,16 @@ export interface CacheScrobbleData {
 export interface CacheScrobble extends CacheScrobbleData {
 	id: number;
 }
+
+export interface ShortTrackCacheData {
+	song: CloneableSong;
+	cachedAt: number;
+	scrobbledAt: number | null;
+}
+
+export interface ShortTrackCache extends ShortTrackCacheData {
+	id: number;
+}
 export type Blocklists = Record<string, Blocklist>;
 
 export type Blocklist = Record<string, string>;
@@ -167,6 +178,7 @@ export interface DataModels extends ScrobblerModels {
 	[LOCAL_CACHE]: { [key: string]: SavedEdit };
 	[REGEX_EDITS]: RegexEdit[];
 	[SCROBBLE_CACHE]: CacheScrobble[];
+	[SHORT_TRACK_CACHE]: ShortTrackCache[];
 	[BLOCKED_TAGS]: BlockedTags;
 	[BLOCKLISTS]: Blocklists;
 

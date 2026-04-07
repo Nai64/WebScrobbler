@@ -147,6 +147,19 @@ export const REGEX_EDITS = 'RegexEdits';
 export const SCROBBLE_CACHE = 'ScrobbleCache';
 
 /**
+ * This storage contains the short track cache for tracks that are 4 seconds or less.
+ * These tracks are cached and scrobbled after a delay to ensure they're properly recorded.
+ * The format of the storage data is as follows:
+ * \{
+ *     song: {@link CloneableSong},
+ *     cachedAt: timestamp when the track was cached (milliseconds),
+ *     scrobbledAt: timestamp when the track was scrobbled (milliseconds) or null,
+ *     id: auto-increment unique ID.
+ * \}
+ */
+export const SHORT_TRACK_CACHE = 'ShortTrackCache';
+
+/**
  * This storage contains the data saved and used by the extension core.
  * The format of storage data is following:
  * \{
@@ -174,6 +187,7 @@ const storageTypeMap = {
 	[LOCAL_CACHE]: LOCAL,
 	[REGEX_EDITS]: LOCAL,
 	[SCROBBLE_CACHE]: LOCAL,
+	[SHORT_TRACK_CACHE]: LOCAL,
 	[BLOCKED_TAGS]: LOCAL,
 	[CORE]: LOCAL,
 	[STATE_MANAGEMENT]: LOCAL,
