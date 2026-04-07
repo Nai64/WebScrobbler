@@ -38,7 +38,7 @@ export const DEFAULT_SCROBBLE_PERCENT = 50;
 /**
  * Minimum number of seconds of scrobbleable track.
  */
-export const MIN_TRACK_DURATION = 30;
+export const MIN_TRACK_DURATION = 0;
 
 /**
  * Max number of seconds of playback before the track is scrobbled.

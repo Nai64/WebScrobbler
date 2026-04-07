@@ -103,9 +103,14 @@ const GET_SECONDS_TO_SCROBBLE_DATA = [
 		expected: Util.DEFAULT_SCROBBLE_TIME,
 	},
 	{
-		description: 'should return -1 for short songs',
-		args: [Util.MIN_TRACK_DURATION - 1, scrobblePercent],
-		expected: -1,
+		description: 'should return scrobble time for very short tracks (e.g., 1 second)',
+		args: [1, scrobblePercent],
+		expected: 1,
+	},
+	{
+		description: 'should return scrobble time for very short tracks (e.g., 10 seconds)',
+		args: [10, scrobblePercent],
+		expected: 5,
 	},
 	{
 		description: 'should return half of song duration',
