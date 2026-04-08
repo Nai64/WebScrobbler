@@ -138,6 +138,22 @@ a {
 		}
 	}
 
+	.playCountMilestone1 {
+		@extend .playCount;
+		background: linear-gradient(135deg, var(--last-fm) 0%, #ff6b35 100%);
+	}
+
+	.playCountMilestone2 {
+		@extend .playCount;
+		background: linear-gradient(135deg, #ff6b35 0%, #ffd700 100%);
+	}
+
+	.playCountMilestone3 {
+		@extend .playCount;
+		background: linear-gradient(135deg, #ffd700 0%, #ff1493 100%);
+		animation: pulse 2s ease-in-out infinite;
+	}
+
 	.label {
 		background-color: var(--last-fm);
 		border-radius: 0.25em;
@@ -301,6 +317,7 @@ a {
 		 * as this will be confusing to the user.
 		 */
 		@supports not (#{util.$mobile-supports}) {
+
 			&:hover,
 			&:has(.regexToggleInput:focus-visible) {
 				background-color: var(--last-fm);
@@ -487,5 +504,17 @@ a {
 				width: 100%;
 			}
 		}
+	}
+}
+
+@keyframes pulse {
+
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.85;
 	}
 }

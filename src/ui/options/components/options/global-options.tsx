@@ -74,6 +74,54 @@ export default function GlobalOptionsList(props: {
 					i18nlabel="optionAutoToggleLove"
 					key={Options.AUTO_TOGGLE_LOVE}
 				/>
+				<GlobalOptionEntry
+					options={props.options}
+					setOptions={props.setOptions}
+					globalOptions={globalOptions}
+					i18ntitle="optionAutoLoveScrobbledTracksTitle"
+					i18nlabel="optionAutoLoveScrobbledTracks"
+					key={Options.AUTO_LOVE_SCROBBLED_TRACKS}
+				/>
+				<GlobalOptionEntry
+					options={props.options}
+					setOptions={props.setOptions}
+					globalOptions={globalOptions}
+					i18ntitle="optionShowArtistScrobbleCountTitle"
+					i18nlabel="optionShowArtistScrobbleCount"
+					key={Options.SHOW_ARTIST_SCROBBLE_COUNT}
+				/>
+				<GlobalOptionEntry
+					options={props.options}
+					setOptions={props.setOptions}
+					globalOptions={globalOptions}
+					i18ntitle="optionShowTrackDurationTitle"
+					i18nlabel="optionShowTrackDuration"
+					key={Options.SHOW_TRACK_DURATION}
+				/>
+				<GlobalOptionEntry
+					options={props.options}
+					setOptions={props.setOptions}
+					globalOptions={globalOptions}
+					i18ntitle="optionShowScrobbleProgressTitle"
+					i18nlabel="optionShowScrobbleProgress"
+					key={Options.SHOW_SCROBBLE_PROGRESS}
+				/>
+				<GlobalOptionEntry
+					options={props.options}
+					setOptions={props.setOptions}
+					globalOptions={globalOptions}
+					i18ntitle="optionShowScrobblePercentTitle"
+					i18nlabel="optionShowScrobblePercent"
+					key={Options.SHOW_SCROBBLE_PERCENT}
+				/>
+				<GlobalOptionEntry
+					options={props.options}
+					setOptions={props.setOptions}
+					globalOptions={globalOptions}
+					i18ntitle="optionColorizePlayCountTitle"
+					i18nlabel="optionColorizePlayCount"
+					key={Options.COLORIZE_PLAY_COUNT}
+				/>
 			</ul>
 		</>
 	);

@@ -55,6 +55,62 @@
         "message": "When you like or dislike a track on a website, the track will also be loved/unloved in your scrobbler",
         "description": "Option label"
     },
+    "optionAutoLoveScrobbledTracks": {
+        "message": "Auto-love scrobbled tracks",
+        "description": "Option label"
+    },
+    "optionAutoLoveScrobbledTracksTitle": {
+        "message": "Automatically love tracks after they are successfully scrobbled",
+        "description": "Option title"
+    },
+    "optionShowArtistScrobbleCount": {
+        "message": "Show artist scrobble count",
+        "description": "Option label"
+    },
+    "optionShowArtistScrobbleCountTitle": {
+        "message": "Display the artist's total scrobble count in the popup",
+        "description": "Option title"
+    },
+    "optionColorizePlayCount": {
+        "message": "Colorize play count",
+        "description": "Option label"
+    },
+    "optionColorizePlayCountTitle": {
+        "message": "Color-code the play count based on milestones (10, 100, 1000+)",
+        "description": "Option title"
+    },
+    "infoCopyTrackInfo": {
+        "message": "Copy track info to clipboard",
+        "description": "Button title"
+    },
+    "infoCopyTrackInfoShort": {
+        "message": "Copy",
+        "description": "Short button label"
+    },
+    "optionShowTrackDuration": {
+        "message": "Show track duration",
+        "description": "Option label"
+    },
+    "optionShowTrackDurationTitle": {
+        "message": "Display the track duration in the popup",
+        "description": "Option title"
+    },
+    "optionShowScrobbleProgress": {
+        "message": "Show scrobble countdown",
+        "description": "Option label"
+    },
+    "optionShowScrobbleProgressTitle": {
+        "message": "Show a countdown timer until the track is scrobbled",
+        "description": "Option title"
+    },
+    "optionShowScrobblePercent": {
+        "message": "Show scrobble percent",
+        "description": "Option label"
+    },
+    "optionShowScrobblePercentTitle": {
+        "message": "Show the scrobble percentage in the countdown",
+        "description": "Option title"
+    },
     "optionDebugLoggingEnabled": {
         "message": "Enable debug logging",
         "description": "Option label"
@@ -201,6 +257,42 @@
     },
     "optionThemeSystem": {
         "message": "System",
+        "description": "Option label"
+    },
+    "optionThemeOcean": {
+        "message": "Ocean",
+        "description": "Option label"
+    },
+    "optionThemePurple": {
+        "message": "Purple",
+        "description": "Option label"
+    },
+    "optionThemeGreen": {
+        "message": "Green",
+        "description": "Option label"
+    },
+    "optionThemeSolarizedLight": {
+        "message": "Solarized Light",
+        "description": "Option label"
+    },
+    "optionThemeNord": {
+        "message": "Nord",
+        "description": "Option label"
+    },
+    "optionThemeAmoled": {
+        "message": "AMOLED",
+        "description": "Option label"
+    },
+    "optionThemeLsdCrack": {
+        "message": "LSD Crack",
+        "description": "Option label"
+    },
+    "optionThemeShit": {
+        "message": "Shit",
+        "description": "Option label"
+    },
+    "optionThemeVomit": {
+        "message": "Vomit",
         "description": "Option label"
     },
     "optionsAccounts": {
@@ -974,6 +1066,10 @@
     "infoYourScrobbles": {
         "message": "Your scrobbles: $1",
         "description": "Label for user play count"
+    },
+    "infoArtistScrobbles": {
+        "message": "Artist scrobbles: $1",
+        "description": "Label for artist play count"
     },
     "pageActionBase": {
         "message": "This site is supported for scrobbling",

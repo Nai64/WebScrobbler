@@ -23,6 +23,7 @@ import {
 	FavoriteOutlined,
 	HeartBrokenOutlined,
 	RestartAltOutlined,
+	ContentCopyOutlined,
 } from '@/ui/components/icons';
 import { sendBackgroundMessage } from '@/util/communication';
 import * as ControllerMode from '@/core/object/controller/controller-mode';
@@ -39,6 +40,7 @@ import { PopupAnchor, Squircle, isIos } from '../components/util';
 import ContextMenu from '../components/context-menu/context-menu';
 import type { Navigator } from '../options/components/navigator';
 import { getMobileNavigatorGroup } from '../options/components/navigator';
+import * as Options from '@/core/storage/options';
 
 /**
  * Component showing info for currently playing song if there is one
@@ -168,6 +170,11 @@ function NowPlayingContextMenu(props: {
 				icon: EditOutlined,
 				action: () => props.setIsEditing(true),
 			},
+			{
+				namei18n: 'infoCopyTrackInfoShort',
+				icon: ContentCopyOutlined,
+				action: () => actionCopyTrackInfo(props.song),
+			},
 		];
 		if (props.song()?.flags.isCorrectedByUser) {
 			items.push({
@@ -295,15 +302,68 @@ function TrackData(props: { song: Accessor<ClonedSong | null> }) {
  */
 function TrackMetadata(props: { song: Accessor<ClonedSong | null> }) {
 	const [session, setSession] = createSignal<SessionData>();
+	const [showArtistCount, setShowArtistCount] = createSignal(true);
+	const [showDuration, setShowDuration] = createSignal(true);
+	const [showProgress, setShowProgress] = createSignal(true);
+	const [showPercent, setShowPercent] = createSignal(true);
+	const [colorizePlayCount, setColorizePlayCount] = createSignal(true);
+	const [scrobblePercent, setScrobblePercent] = createSignal(50);
+	const [timeUntilScrobble, setTimeUntilScrobble] = createSignal<number | null>(null);
+	const [duration, setDuration] = createSignal<number | null>(null);
+
 	scrobbleService
 		.getScrobblerByLabel('Last.fm')
 		?.getSession()
 		.then(setSession);
 
+	// Load options
+	onMount(async () => {
+		setShowArtistCount(await Options.getOption(Options.SHOW_ARTIST_SCROBBLE_COUNT) as boolean);
+		setShowDuration(await Options.getOption(Options.SHOW_TRACK_DURATION) as boolean);
+		setShowProgress(await Options.getOption(Options.SHOW_SCROBBLE_PROGRESS) as boolean);
+		setShowPercent(await Options.getOption(Options.SHOW_SCROBBLE_PERCENT) as boolean);
+		setColorizePlayCount(await Options.getOption(Options.COLORIZE_PLAY_COUNT) as boolean);
+		setScrobblePercent(await Options.getOption(Options.SCROBBLE_PERCENT) as number);
+	});
+
+	// Update countdown timer
+	createEffect(() => {
+		const songDuration = props.song()?.getDuration();
+		setDuration(songDuration ?? null);
+		
+		if (songDuration && showProgress()) {
+			const scrobbleTime = (songDuration * scrobblePercent()) / 100;
+			// Start countdown from duration down to scrobble time
+			const startTime = Date.now();
+			const interval = setInterval(() => {
+				const elapsed = (Date.now() - startTime) / 1000;
+				const remaining = Math.max(0, scrobbleTime - elapsed);
+				setTimeUntilScrobble(remaining);
+				
+				if (remaining <= 0) {
+					clearInterval(interval);
+				}
+			}, 100);
+			
+			onCleanup(() => clearInterval(interval));
+		}
+	});
+
+	const playCount = props.song()?.metadata.userPlayCount || 0;
+	const playCountClass = colorizePlayCount() && playCount > 0
+		? playCount >= 1000
+			? styles.playCountMilestone3
+			: playCount >= 100
+				? styles.playCountMilestone2
+				: playCount >= 10
+					? styles.playCountMilestone1
+					: styles.playCount
+		: styles.playCount;
+
 	return (
 		<div class={styles.playDetails}>
 			<PopupLink
-				class={`${styles.playCount} ${styles.label}`}
+				class={`${playCountClass} ${styles.label}`}
 				href={createTrackLibraryURL(
 					session()?.sessionName,
 					props.song()?.getArtist(),
@@ -311,15 +371,50 @@ function TrackMetadata(props: { song: Accessor<ClonedSong | null> }) {
 				)}
 				title={t(
 					'infoYourScrobbles',
-					(props.song()?.metadata.userPlayCount || 0).toString(),
+					playCount.toString(),
 				)}
 			>
 				<LastFMIcon />
-				{props.song()?.metadata.userPlayCount || 0}
+				{playCount}
 			</PopupLink>
+			<Show when={showArtistCount() && props.song()?.metadata.artistPlayCount !== undefined}>
+				<PopupLink
+					class={`${styles.playCount} ${styles.label}`}
+					href={createArtistURL(props.song()?.getArtist())}
+					title={t(
+						'infoArtistScrobbles',
+						(props.song()?.metadata.artistPlayCount || 0).toString(),
+					)}
+				>
+					👤
+					{props.song()?.metadata.artistPlayCount || 0}
+				</PopupLink>
+			</Show>
+			<Show when={showDuration() && duration()}>
+				<span class={styles.label}>
+					⏱ {formatDuration(duration()!)}
+				</span>
+			</Show>
+			<Show when={showProgress() && timeUntilScrobble() !== null && timeUntilScrobble()! > 0}>
+				<span class={styles.label}>
+					⏳ {Math.ceil(timeUntilScrobble()!)}s
+					<Show when={showPercent()}>
+						{' '}(@{scrobblePercent()}%)
+					</Show>
+				</span>
+			</Show>
 			<span class={styles.label}>{props.song()?.connector.label}</span>
 		</div>
 	);
+}
+
+/**
+ * Format duration in seconds to MM:SS
+ */
+function formatDuration(seconds: number): string {
+	const minutes = Math.floor(seconds / 60);
+	const remainingSeconds = Math.floor(seconds % 60);
+	return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
 /**
@@ -399,6 +494,13 @@ function TrackControls(props: {
 					</Show>
 				</span>
 			</button>
+			<button
+				class={styles.controlButton}
+				onClick={() => actionCopyTrackInfo(props.song)}
+				title={t('infoCopyTrackInfo')}
+			>
+				<ContentCopyOutlined />
+			</button>
 		</div>
 	);
 }
@@ -455,6 +557,31 @@ function actionSkipCurrentSong(tab: Resource<ManagerTab>) {
 	sendBackgroundMessage(tab()?.tabId || -1, {
 		type: 'skipCurrentSong',
 		payload: undefined,
+	});
+}
+
+/**
+ * Copy track info to clipboard
+ *
+ * @param song - currently playing song
+ */
+function actionCopyTrackInfo(song: Accessor<ClonedSong | null>) {
+	const songData = song();
+	if (!songData) return;
+	
+	const artist = songData.getArtist() || 'Unknown Artist';
+	const track = songData.getTrack() || 'Unknown Track';
+	const album = songData.getAlbum();
+	
+	const text = album
+		? `${artist} - ${track} (${album})`
+		: `${artist} - ${track}`;
+	
+	navigator.clipboard.writeText(text).then(() => {
+		// Optional: show a brief success indicator
+		console.log('Track info copied to clipboard');
+	}).catch(err => {
+		console.error('Failed to copy track info:', err);
 	});
 }
 

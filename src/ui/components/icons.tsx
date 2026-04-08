@@ -38,6 +38,10 @@ export const AddOutlined = createMaterialIcon(() => (
 	<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 ));
 
+export const ContentCopyOutlined = createMaterialIcon(() => (
+	<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+));
+
 export const Album = createMaterialIcon(() => (
 	<>
 		<path d="M0 0h24v24H0z" fill="none" />

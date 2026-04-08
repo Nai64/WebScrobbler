@@ -13,6 +13,7 @@ import type {
 	CacheScrobble,
 	BlockedTags,
 	Blocklists,
+	ShortTrackCache,
 } from '@/core/storage/wrapper';
 import type { RegexEdit } from './regex';
 
@@ -149,6 +150,7 @@ export function hideObjectValue(
 		| StateManagement
 		| RegexEdit[]
 		| CacheScrobble[]
+		| ShortTrackCache[]
 		| BlockedTags[]
 		| Blocklists,
 ): string {

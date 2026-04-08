@@ -1,11 +1,11 @@
 {
-  "name": "web-scrobbler",
-  "version": "3.20.0",
+  "name": "ws-nai64",
+  "version": "1.0.0",
   "author": "David Šabata <posta@davidsabata.cz>",
   "contributors": [
     "@mountainash (https://mountainash.id.au/)"
   ],
-  "description": "Scrobble music all around the web!",
+  "description": "WS Nai64 - Enhanced music scrobbler with advanced features",
   "private": true,
   "type": "module",
   "scripts": {

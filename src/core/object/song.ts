@@ -53,6 +53,7 @@ export type Metadata =
 			trackArtUrl?: string;
 			trackUrl?: string;
 			userPlayCount?: number;
+			artistPlayCount?: number;
 			userloved?: boolean;
 	  }
 	| Record<string, never>;

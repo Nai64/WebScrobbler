@@ -18,7 +18,13 @@ export const USE_UNRECOGNIZED_SONG_NOTIFICATIONS =
 export const USE_INFOBOX = 'showInfobox';
 export const SCROBBLE_PODCASTS = 'scrobblePodcasts';
 export const AUTO_TOGGLE_LOVE = 'autoToggleLove';
+export const AUTO_LOVE_SCROBBLED_TRACKS = 'autoLoveScrobbledTracks';
+export const SHOW_ARTIST_SCROBBLE_COUNT = 'showArtistScrobbleCount';
 export const FORCE_RECOGNIZE = 'forceRecognize';
+export const SHOW_TRACK_DURATION = 'showTrackDuration';
+export const SHOW_SCROBBLE_PROGRESS = 'showScrobbleProgress';
+export const SHOW_SCROBBLE_PERCENT = 'showScrobblePercent';
+export const COLORIZE_PLAY_COUNT = 'colorizePlayCount';
 export const SCROBBLE_RECOGNIZED_TRACKS = 'scrobbleRecognizedTracks';
 export const SCROBBLE_EDITED_TRACKS_ONLY = 'scrobbleEditedTracksOnly';
 export const SCROBBLE_PERCENT = 'scrobblePercent';
@@ -87,6 +93,36 @@ export interface GlobalOptions {
 	[AUTO_TOGGLE_LOVE]: boolean;
 
 	/**
+	 * Automatically love tracks after they are scrobbled.
+	 */
+	[AUTO_LOVE_SCROBBLED_TRACKS]: boolean;
+
+	/**
+	 * Show artist scrobble count in popup.
+	 */
+	[SHOW_ARTIST_SCROBBLE_COUNT]: boolean;
+
+	/**
+	 * Show track duration in popup.
+	 */
+	[SHOW_TRACK_DURATION]: boolean;
+
+	/**
+	 * Show scrobble progress countdown in popup.
+	 */
+	[SHOW_SCROBBLE_PROGRESS]: boolean;
+
+	/**
+	 * Show scrobble percent in progress.
+	 */
+	[SHOW_SCROBBLE_PERCENT]: boolean;
+
+	/**
+	 * Colorize play count based on milestones.
+	 */
+	[COLORIZE_PLAY_COUNT]: boolean;
+
+	/**
 	 * Disable guessing of albums
 	 */
 	[ALBUM_GUESSING_DISABLED]: boolean;
@@ -116,6 +152,12 @@ const DEFAULT_OPTIONS: GlobalOptions = {
 	[SCROBBLE_PERCENT]: DEFAULT_SCROBBLE_PERCENT,
 	[USE_INFOBOX]: true,
 	[AUTO_TOGGLE_LOVE]: true,
+	[AUTO_LOVE_SCROBBLED_TRACKS]: false,
+	[SHOW_ARTIST_SCROBBLE_COUNT]: true,
+	[SHOW_TRACK_DURATION]: true,
+	[SHOW_SCROBBLE_PROGRESS]: true,
+	[SHOW_SCROBBLE_PERCENT]: true,
+	[COLORIZE_PLAY_COUNT]: true,
 	[ALBUM_GUESSING_DISABLED]: false,
 	[ALBUM_GUESSING_UNEDITED_ONLY]: true,
 	[ALBUM_GUESSING_ALL_TRACKS]: false,

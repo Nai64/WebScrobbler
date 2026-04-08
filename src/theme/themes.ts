@@ -67,7 +67,16 @@ type Theme =
 	| 'dark'
 	| 'light'
 	| 'high-contrast-dark'
-	| 'high-contrast-light';
+	| 'high-contrast-light'
+	| 'ocean'
+	| 'purple'
+	| 'green'
+	| 'solarized-light'
+	| 'nord'
+	| 'amoled'
+	| 'lsd-crack'
+	| 'shit'
+	| 'vomit';
 export type ModifiedTheme = `theme-${Theme}`;
 
 export const themeList: Theme[] = [
@@ -76,6 +85,15 @@ export const themeList: Theme[] = [
 	'light',
 	'high-contrast-dark',
 	'high-contrast-light',
+	'ocean',
+	'purple',
+	'green',
+	'solarized-light',
+	'nord',
+	'amoled',
+	'lsd-crack',
+	'shit',
+	'vomit',
 ];
 export const modifiedThemeList = themeList.map(
 	(theme) => `theme-${theme}`,

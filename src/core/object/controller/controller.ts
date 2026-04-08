@@ -30,6 +30,7 @@ import { ScrobbleStatus } from '@/core/storage/wrapper';
 import browser from 'webextension-polyfill';
 import type BaseConnector from '@/core/content/connector';
 import Blocklist from '@/core/storage/blocklist';
+import * as OptionsModule from '@/core/storage/options';
 
 /**
  * List of song fields used to check if song is changed. If any of
@@ -1438,6 +1439,19 @@ export default class Controller {
 			this.setMode(ControllerMode.Scrobbled);
 
 			this.onSongUpdated();
+
+			// Auto-love the track if enabled
+			if (await OptionsModule.getOption(OptionsModule.AUTO_LOVE_SCROBBLED_TRACKS)) {
+				this.debugLog('Auto-love enabled, loving track...');
+				sendContentMessage({
+					type: 'toggleLove',
+					payload: {
+						song: this.currentSong.getCloneableData(),
+						isLoved: true,
+						shouldShowNotification: false,
+					},
+				});
+			}
 		} else if (areAllResults(results[0], ServiceCallResult.RESULT_IGNORE)) {
 			this.debugLog('Song is ignored by service');
 			this.setMode(ControllerMode.Ignored);
