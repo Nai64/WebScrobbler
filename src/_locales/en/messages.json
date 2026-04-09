@@ -79,6 +79,46 @@
         "message": "Color-code the play count based on milestones (10, 100, 1000+)",
         "description": "Option title"
     },
+    "optionEnablePopupAnimation": {
+        "message": "Enable popup animations",
+        "description": "Option label"
+    },
+    "optionEnablePopupAnimationTitle": {
+        "message": "Add smooth bouncy animations when showing/hiding the popup panel",
+        "description": "Option title"
+    },
+    "optionAnimationType": {
+        "message": "Animation Type",
+        "description": "Option label"
+    },
+    "optionAnimationTypeTitle": {
+        "message": "Choose the style of popup animation",
+        "description": "Option title"
+    },
+    "optionAnimationTypeBounce": {
+        "message": "Bounce (Default)",
+        "description": "Option label"
+    },
+    "optionAnimationTypeSlide": {
+        "message": "Slide",
+        "description": "Option label"
+    },
+    "optionAnimationTypeFade": {
+        "message": "Fade",
+        "description": "Option label"
+    },
+    "optionAnimationTypeScale": {
+        "message": "Scale",
+        "description": "Option label"
+    },
+    "optionAnimationSpeed": {
+        "message": "Animation Speed",
+        "description": "Option label"
+    },
+    "optionAnimationSpeedTitle": {
+        "message": "Adjust how fast the popup animates in milliseconds",
+        "description": "Option title"
+    },
     "infoCopyTrackInfo": {
         "message": "Copy track info to clipboard",
         "description": "Button title"
@@ -294,6 +334,146 @@
     "optionThemeVomit": {
         "message": "Vomit",
         "description": "Option label"
+    },
+    "optionsPopupCustomization": {
+        "message": "Popup Customization",
+        "description": "Section title"
+    },
+    "popupColors": {
+        "message": "Colors",
+        "description": "Subsection title"
+    },
+    "popupBgColor": {
+        "message": "Background",
+        "description": "Color picker label"
+    },
+    "popupTextColor": {
+        "message": "Text",
+        "description": "Color picker label"
+    },
+    "popupAccentColor": {
+        "message": "Accent",
+        "description": "Color picker label"
+    },
+    "popupTypography": {
+        "message": "Typography",
+        "description": "Subsection title"
+    },
+    "optionPopupFont": {
+        "message": "Font",
+        "description": "Option label"
+    },
+    "optionPopupBoldArtist": {
+        "message": "Bold artist name",
+        "description": "Option label"
+    },
+    "optionPopupBoldArtistTitle": {
+        "message": "Display artist name in bold",
+        "description": "Option title"
+    },
+    "optionPopupUppercaseTrack": {
+        "message": "Uppercase track name",
+        "description": "Option label"
+    },
+    "optionPopupUppercaseTrackTitle": {
+        "message": "Display track name in uppercase",
+        "description": "Option title"
+    },
+    "popupLayout": {
+        "message": "Layout",
+        "description": "Subsection title"
+    },
+    "optionPopupScale": {
+        "message": "Scale",
+        "description": "Option label"
+    },
+    "optionPopupScaleTitle": {
+        "message": "Adjust the overall popup size (0.5x - 2x)",
+        "description": "Option title"
+    },
+    "optionPopupGap": {
+        "message": "Element Gap",
+        "description": "Option label"
+    },
+    "optionPopupGapTitle": {
+        "message": "Adjust spacing between elements in pixels",
+        "description": "Option title"
+    },
+    "optionPopupPadding": {
+        "message": "Padding",
+        "description": "Option label"
+    },
+    "optionPopupPaddingTitle": {
+        "message": "Adjust internal padding in pixels",
+        "description": "Option title"
+    },
+    "optionPopupBorderRadius": {
+        "message": "Border Radius",
+        "description": "Option label"
+    },
+    "optionPopupBorderRadiusTitle": {
+        "message": "Adjust corner roundness in pixels",
+        "description": "Option title"
+    },
+    "popupVisibility": {
+        "message": "Visibility",
+        "description": "Subsection title"
+    },
+    "optionPopupShowCoverArt": {
+        "message": "Show cover art",
+        "description": "Option label"
+    },
+    "optionPopupShowCoverArtTitle": {
+        "message": "Display album artwork in the popup",
+        "description": "Option title"
+    },
+    "optionPopupShowAlbum": {
+        "message": "Show album",
+        "description": "Option label"
+    },
+    "optionPopupShowAlbumTitle": {
+        "message": "Display album name",
+        "description": "Option title"
+    },
+    "optionPopupShowAlbumArtist": {
+        "message": "Show album artist",
+        "description": "Option label"
+    },
+    "optionPopupShowAlbumArtistTitle": {
+        "message": "Display album artist name",
+        "description": "Option title"
+    },
+    "optionPopupShowConnector": {
+        "message": "Show connector",
+        "description": "Option label"
+    },
+    "optionPopupShowConnectorTitle": {
+        "message": "Display connector name",
+        "description": "Option title"
+    },
+    "optionPopupRoundedCorners": {
+        "message": "Rounded corners",
+        "description": "Option label"
+    },
+    "optionPopupRoundedCornersTitle": {
+        "message": "Use rounded corners for cover art",
+        "description": "Option title"
+    },
+    "optionPopupShadow": {
+        "message": "Shadow",
+        "description": "Option label"
+    },
+    "optionPopupShadowTitle": {
+        "message": "Add drop shadow to popup",
+        "description": "Option title"
+    },
+    "optionPopupCoverArtSize": {
+        "message": "Cover art size",
+        "description": "Option label"
+    },
+    "optionPopupCoverArtSizeTitle": {
+        "message": "Adjust cover artwork size in pixels",
+        "description": "Option title"
     },
     "optionsAccounts": {
         "message": "Accounts",

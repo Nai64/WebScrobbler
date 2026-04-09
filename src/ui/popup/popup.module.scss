@@ -159,6 +159,15 @@ a {
 		border-radius: 0.25em;
 		color: var(--active-text);
 		padding: 0.25em 0.5em;
+		min-width: 3em;
+		text-align: center;
+		display: inline-block;
+	}
+
+	.scrobbleCountdown {
+		// Fixed width to prevent layout shaking when countdown changes
+		min-width: 5em;
+		font-variant-numeric: tabular-nums;
 	}
 
 	.controlButtons {

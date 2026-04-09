@@ -4,6 +4,7 @@ import { createResource } from 'solid-js';
 import GlobalOptionsList from './global-options';
 import ConnectorOptionsList from './connector-options';
 import ScrobbleBehavior from './scrobble-behavior';
+import PopupCustomization from './popup-customization';
 
 const globalOptions = BrowserStorage.getStorage(BrowserStorage.OPTIONS);
 
@@ -21,6 +22,7 @@ export default function OptionsComponent() {
 			<GlobalOptionsList options={options} setOptions={setOptions} />
 			<ConnectorOptionsList />
 			<ScrobbleBehavior options={options} setOptions={setOptions} />
+			<PopupCustomization options={options} setOptions={setOptions} />
 		</>
 	);
 }

@@ -26,6 +26,23 @@ export const SHOW_SCROBBLE_PROGRESS = 'showScrobbleProgress';
 export const SHOW_SCROBBLE_PERCENT = 'showScrobblePercent';
 export const COLORIZE_PLAY_COUNT = 'colorizePlayCount';
 export const SCROBBLE_RECOGNIZED_TRACKS = 'scrobbleRecognizedTracks';
+export const POPUP_BG_COLOR = 'popupBgColor';
+export const POPUP_TEXT_COLOR = 'popupTextColor';
+export const POPUP_ACCENT_COLOR = 'popupAccentColor';
+export const POPUP_FONT = 'popupFont';
+export const POPUP_SCALE = 'popupScale';
+export const POPUP_GAP = 'popupGap';
+export const POPUP_PADDING = 'popupPadding';
+export const POPUP_BORDER_RADIUS = 'popupBorderRadius';
+export const POPUP_SHOW_ALBUM = 'popupShowAlbum';
+export const POPUP_SHOW_ALBUM_ARTIST = 'popupShowAlbumArtist';
+export const POPUP_SHOW_CONNECTOR = 'popupShowConnector';
+export const POPUP_BOLD_ARTIST = 'popupBoldArtist';
+export const POPUP_UPPERCASE_TRACK = 'popupUppercaseTrack';
+export const POPUP_SHOW_COVER_ART = 'popupShowCoverArt';
+export const POPUP_COVER_ART_SIZE = 'popupCoverArtSize';
+export const POPUP_ROUNDED_CORNERS = 'popupRoundedCorners';
+export const POPUP_SHADOW = 'popupShadow';
 export const SCROBBLE_EDITED_TRACKS_ONLY = 'scrobbleEditedTracksOnly';
 export const SCROBBLE_PERCENT = 'scrobblePercent';
 export const DISABLED_CONNECTORS = 'disabledConnectors';
@@ -123,6 +140,91 @@ export interface GlobalOptions {
 	[COLORIZE_PLAY_COUNT]: boolean;
 
 	/**
+	 * Popup background color.
+	 */
+	[POPUP_BG_COLOR]: string;
+
+	/**
+	 * Popup text color.
+	 */
+	[POPUP_TEXT_COLOR]: string;
+
+	/**
+	 * Popup accent color (links, buttons).
+	 */
+	[POPUP_ACCENT_COLOR]: string;
+
+	/**
+	 * Popup font family.
+	 */
+	[POPUP_FONT]: string;
+
+	/**
+	 * Popup scale multiplier.
+	 */
+	[POPUP_SCALE]: number;
+
+	/**
+	 * Gap between popup elements in pixels.
+	 */
+	[POPUP_GAP]: number;
+
+	/**
+	 * Popup padding in pixels.
+	 */
+	[POPUP_PADDING]: number;
+
+	/**
+	 * Popup border radius in pixels.
+	 */
+	[POPUP_BORDER_RADIUS]: number;
+
+	/**
+	 * Show album name in popup.
+	 */
+	[POPUP_SHOW_ALBUM]: boolean;
+
+	/**
+	 * Show album artist in popup.
+	 */
+	[POPUP_SHOW_ALBUM_ARTIST]: boolean;
+
+	/**
+	 * Show connector name in popup.
+	 */
+	[POPUP_SHOW_CONNECTOR]: boolean;
+
+	/**
+	 * Bold artist name.
+	 */
+	[POPUP_BOLD_ARTIST]: boolean;
+
+	/**
+	 * Uppercase track name.
+	 */
+	[POPUP_UPPERCASE_TRACK]: boolean;
+
+	/**
+	 * Show cover art in popup.
+	 */
+	[POPUP_SHOW_COVER_ART]: boolean;
+
+	/**
+	 * Cover art size in pixels.
+	 */
+	[POPUP_COVER_ART_SIZE]: number;
+
+	/**
+	 * Use rounded corners.
+	 */
+	[POPUP_ROUNDED_CORNERS]: boolean;
+
+	/**
+	 * Enable popup shadow.
+	 */
+	[POPUP_SHADOW]: boolean;
+
+	/**
 	 * Disable guessing of albums
 	 */
 	[ALBUM_GUESSING_DISABLED]: boolean;
@@ -158,6 +260,23 @@ const DEFAULT_OPTIONS: GlobalOptions = {
 	[SHOW_SCROBBLE_PROGRESS]: true,
 	[SHOW_SCROBBLE_PERCENT]: true,
 	[COLORIZE_PLAY_COUNT]: true,
+	[POPUP_BG_COLOR]: '',
+	[POPUP_TEXT_COLOR]: '',
+	[POPUP_ACCENT_COLOR]: '',
+	[POPUP_FONT]: 'default',
+	[POPUP_SCALE]: 1,
+	[POPUP_GAP]: 8,
+	[POPUP_PADDING]: 15,
+	[POPUP_BORDER_RADIUS]: 4,
+	[POPUP_SHOW_ALBUM]: true,
+	[POPUP_SHOW_ALBUM_ARTIST]: false,
+	[POPUP_SHOW_CONNECTOR]: true,
+	[POPUP_BOLD_ARTIST]: true,
+	[POPUP_UPPERCASE_TRACK]: false,
+	[POPUP_SHOW_COVER_ART]: true,
+	[POPUP_COVER_ART_SIZE]: 100,
+	[POPUP_ROUNDED_CORNERS]: true,
+	[POPUP_SHADOW]: true,
 	[ALBUM_GUESSING_DISABLED]: false,
 	[ALBUM_GUESSING_UNEDITED_ONLY]: true,
 	[ALBUM_GUESSING_ALL_TRACKS]: false,

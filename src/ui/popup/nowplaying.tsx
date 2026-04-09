@@ -47,6 +47,25 @@ import * as Options from '@/core/storage/options';
  */
 export default function NowPlaying(props: { tab: Resource<ManagerTab> }) {
 	const [isEditing, setIsEditing] = createSignal(false);
+	const [popupOptions, setPopupOptions] = createSignal({
+		bgColor: '',
+		textColor: '',
+		accentColor: '',
+		font: 'default',
+		scale: 1,
+		gap: 8,
+		padding: 15,
+		borderRadius: 4,
+		showAlbum: true,
+		showAlbumArtist: false,
+		showConnector: true,
+		boldArtist: true,
+		uppercaseTrack: false,
+		showCoverArt: true,
+		coverArtSize: 100,
+		roundedCorners: true,
+		shadow: true,
+	});
 
 	const song = createMemo(() => {
 		const rawTab = props.tab();
@@ -58,6 +77,57 @@ export default function NowPlaying(props: { tab: Resource<ManagerTab> }) {
 			return null;
 		}
 		return new ClonedSong(rawSong, rawTab.tabId);
+	});
+
+	// Load popup customization options
+	onMount(async () => {
+		setPopupOptions({
+			bgColor: (await Options.getOption(Options.POPUP_BG_COLOR)) as string,
+			textColor: (await Options.getOption(Options.POPUP_TEXT_COLOR)) as string,
+			accentColor: (await Options.getOption(Options.POPUP_ACCENT_COLOR)) as string,
+			font: (await Options.getOption(Options.POPUP_FONT)) as string,
+			scale: (await Options.getOption(Options.POPUP_SCALE)) as number,
+			gap: (await Options.getOption(Options.POPUP_GAP)) as number,
+			padding: (await Options.getOption(Options.POPUP_PADDING)) as number,
+			borderRadius: (await Options.getOption(Options.POPUP_BORDER_RADIUS)) as number,
+			showAlbum: (await Options.getOption(Options.POPUP_SHOW_ALBUM)) as boolean,
+			showAlbumArtist: (await Options.getOption(Options.POPUP_SHOW_ALBUM_ARTIST)) as boolean,
+			showConnector: (await Options.getOption(Options.POPUP_SHOW_CONNECTOR)) as boolean,
+			boldArtist: (await Options.getOption(Options.POPUP_BOLD_ARTIST)) as boolean,
+			uppercaseTrack: (await Options.getOption(Options.POPUP_UPPERCASE_TRACK)) as boolean,
+			showCoverArt: (await Options.getOption(Options.POPUP_SHOW_COVER_ART)) as boolean,
+			coverArtSize: (await Options.getOption(Options.POPUP_COVER_ART_SIZE)) as number,
+			roundedCorners: (await Options.getOption(Options.POPUP_ROUNDED_CORNERS)) as boolean,
+			shadow: (await Options.getOption(Options.POPUP_SHADOW)) as boolean,
+		});
+	});
+
+	// Generate font family CSS
+	const fontFamily = createMemo(() => {
+		const font = popupOptions().font;
+		switch (font) {
+			case 'arial': return 'Arial, sans-serif';
+			case 'georgia': return 'Georgia, serif';
+			case 'monospace': return 'monospace';
+			case 'comic-sans': return '"Comic Sans MS", cursive';
+			case 'roboto': return 'Roboto, sans-serif';
+			default: return 'Helvetica, Arial, sans-serif';
+		}
+	});
+
+	// Generate popup style object
+	const popupStyle = createMemo(() => {
+		const opts = popupOptions();
+		return {
+			'background-color': opts.bgColor || undefined,
+			'color': opts.textColor || undefined,
+			'font-family': fontFamily(),
+			'transform': `scale(${opts.scale})`,
+			'transform-origin': 'top left',
+			'gap': `${opts.gap}px`,
+			'padding': `${opts.padding}px`,
+			'box-shadow': opts.shadow ? '0 4px 20px rgba(0,0,0,0.3)' : 'none',
+		} as any;
 	});
 
 	// set width property manually, safari doesnt play well with dynamic
@@ -111,42 +181,54 @@ export default function NowPlaying(props: { tab: Resource<ManagerTab> }) {
 						setIsEditing={setIsEditing}
 					/>
 				</Show>
-				<div class={styles.nowPlayingPopup} ref={nowplaying}>
-					<PopupLink
-						class={styles.coverArtWrapper}
-						href={
-							song()?.getTrackArt() ??
-							browser.runtime.getURL('img/cover_art_default.png')
-						}
-						title={t('infoOpenAlbumArt')}
-					>
-						<div
-							class={styles.coverArtBackground}
-							style={{
-								'background-image': `url(${
-									song()?.getTrackArt() ??
-									browser.runtime.getURL(
-										'img/cover_art_default.png',
-									)
-								})`,
-							}}
+				<div 
+					class={styles.nowPlayingPopup} 
+					ref={nowplaying}
+					style={popupStyle()}
+				>
+					<Show when={popupOptions().showCoverArt}>
+						<PopupLink
+							class={styles.coverArtWrapper}
+							href={
+								song()?.getTrackArt() ??
+								browser.runtime.getURL('img/cover_art_default.png')
+							}
+							title={t('infoOpenAlbumArt')}
 						>
-							<img
-								class={styles.coverArt}
-								src={
-									song()?.getTrackArt() ??
-									browser.runtime.getURL(
-										'img/cover_art_default.png',
-									)
-								}
-							/>
-						</div>
-						<Squircle id="coverArtClip" />
-					</PopupLink>
+							<div
+								class={styles.coverArtBackground}
+								style={{
+									'background-image': `url(${
+										song()?.getTrackArt() ??
+										browser.runtime.getURL(
+											'img/cover_art_default.png',
+										)
+									})`,
+									'width': `${popupOptions().coverArtSize}px`,
+									'height': `${popupOptions().coverArtSize}px`,
+								}}
+							>
+								<img
+									class={styles.coverArt}
+									src={
+										song()?.getTrackArt() ??
+										browser.runtime.getURL(
+											'img/cover_art_default.png',
+										)
+									}
+									style={{
+										'border-radius': popupOptions().roundedCorners ? `${popupOptions().borderRadius}px` : '0',
+									}}
+								/>
+							</div>
+							<Squircle id="coverArtClip" />
+						</PopupLink>
+					</Show>
 					<SongDetails
 						song={song}
 						tab={props.tab}
 						setIsEditing={setIsEditing}
+						popupOpts={popupOptions()}
 					/>
 				</div>
 			</Match>
@@ -210,10 +292,11 @@ function SongDetails(props: {
 	song: Accessor<ClonedSong | null>;
 	tab: Resource<ManagerTab>;
 	setIsEditing: Setter<boolean>;
+	popupOpts: any;
 }) {
 	return (
-		<div class={styles.songDetails}>
-			<TrackData song={props.song} />
+		<div class={styles.songDetails} style={{ 'gap': `${props.popupOpts.gap}px` }}>
+			<TrackData song={props.song} popupOpts={props.popupOpts} />
 			<Show when={isIos()}>
 				<IOSLoveTrack song={props.song} tab={props.tab} />
 			</Show>
@@ -256,18 +339,24 @@ function IOSLoveTrack(props: {
 /**
  * The component showing the track data.
  */
-function TrackData(props: { song: Accessor<ClonedSong | null> }) {
+function TrackData(props: { song: Accessor<ClonedSong | null>; popupOpts: any }) {
+	const trackName = props.popupOpts.uppercaseTrack 
+		? (props.song()?.getTrack() || '').toUpperCase()
+		: props.song()?.getTrack();
+	
+	const artistClass = props.popupOpts.boldArtist ? styles.bold : '';
+	
 	return (
 		<>
 			<PopupLink
-				class={styles.bold}
+				class={artistClass}
 				href={createTrackURL(
 					props.song()?.getArtist(),
 					props.song()?.getTrack(),
 				)}
-				title={t('infoViewTrackPage', props.song()?.getTrack() ?? '')}
+				title={t('infoViewTrackPage', trackName ?? '')}
 			>
-				{props.song()?.getTrack()}
+				{trackName}
 			</PopupLink>
 			<PopupLink
 				href={createArtistURL(props.song()?.getArtist())}
@@ -275,24 +364,28 @@ function TrackData(props: { song: Accessor<ClonedSong | null> }) {
 			>
 				{props.song()?.getArtist()}
 			</PopupLink>
-			<PopupLink
-				href={createAlbumURL(
-					props.song()?.getAlbumArtist() || props.song()?.getArtist(),
-					props.song()?.getAlbum(),
-				)}
-				title={t('infoViewAlbumPage', props.song()?.getAlbum() ?? '')}
-			>
-				{props.song()?.getAlbum()}
-			</PopupLink>
-			<PopupLink
-				href={createArtistURL(props.song()?.getAlbumArtist())}
-				title={t(
-					'infoViewArtistPage',
-					props.song()?.getAlbumArtist() ?? '',
-				)}
-			>
-				{props.song()?.getAlbumArtist()}
-			</PopupLink>
+			<Show when={props.popupOpts.showAlbum}>
+				<PopupLink
+					href={createAlbumURL(
+						props.song()?.getAlbumArtist() || props.song()?.getArtist(),
+						props.song()?.getAlbum(),
+					)}
+					title={t('infoViewAlbumPage', props.song()?.getAlbum() ?? '')}
+				>
+					{props.song()?.getAlbum()}
+				</PopupLink>
+			</Show>
+			<Show when={props.popupOpts.showAlbumArtist}>
+				<PopupLink
+					href={createArtistURL(props.song()?.getAlbumArtist())}
+					title={t(
+						'infoViewArtistPage',
+						props.song()?.getAlbumArtist() ?? '',
+					)}
+				>
+					{props.song()?.getAlbumArtist()}
+				</PopupLink>
+			</Show>
 		</>
 	);
 }
@@ -302,11 +395,11 @@ function TrackData(props: { song: Accessor<ClonedSong | null> }) {
  */
 function TrackMetadata(props: { song: Accessor<ClonedSong | null> }) {
 	const [session, setSession] = createSignal<SessionData>();
-	const [showArtistCount, setShowArtistCount] = createSignal(true);
 	const [showDuration, setShowDuration] = createSignal(true);
 	const [showProgress, setShowProgress] = createSignal(true);
 	const [showPercent, setShowPercent] = createSignal(true);
 	const [colorizePlayCount, setColorizePlayCount] = createSignal(true);
+	const [showConnector, setShowConnector] = createSignal(true);
 	const [scrobblePercent, setScrobblePercent] = createSignal(50);
 	const [timeUntilScrobble, setTimeUntilScrobble] = createSignal<number | null>(null);
 	const [duration, setDuration] = createSignal<number | null>(null);
@@ -318,11 +411,11 @@ function TrackMetadata(props: { song: Accessor<ClonedSong | null> }) {
 
 	// Load options
 	onMount(async () => {
-		setShowArtistCount(await Options.getOption(Options.SHOW_ARTIST_SCROBBLE_COUNT) as boolean);
 		setShowDuration(await Options.getOption(Options.SHOW_TRACK_DURATION) as boolean);
 		setShowProgress(await Options.getOption(Options.SHOW_SCROBBLE_PROGRESS) as boolean);
 		setShowPercent(await Options.getOption(Options.SHOW_SCROBBLE_PERCENT) as boolean);
 		setColorizePlayCount(await Options.getOption(Options.COLORIZE_PLAY_COUNT) as boolean);
+		setShowConnector(await Options.getOption(Options.POPUP_SHOW_CONNECTOR) as boolean);
 		setScrobblePercent(await Options.getOption(Options.SCROBBLE_PERCENT) as number);
 	});
 
@@ -377,33 +470,22 @@ function TrackMetadata(props: { song: Accessor<ClonedSong | null> }) {
 				<LastFMIcon />
 				{playCount}
 			</PopupLink>
-			<Show when={showArtistCount() && props.song()?.metadata.artistPlayCount !== undefined}>
-				<PopupLink
-					class={`${styles.playCount} ${styles.label}`}
-					href={createArtistURL(props.song()?.getArtist())}
-					title={t(
-						'infoArtistScrobbles',
-						(props.song()?.metadata.artistPlayCount || 0).toString(),
-					)}
-				>
-					👤
-					{props.song()?.metadata.artistPlayCount || 0}
-				</PopupLink>
-			</Show>
 			<Show when={showDuration() && duration()}>
 				<span class={styles.label}>
 					⏱ {formatDuration(duration()!)}
 				</span>
 			</Show>
 			<Show when={showProgress() && timeUntilScrobble() !== null && timeUntilScrobble()! > 0}>
-				<span class={styles.label}>
-					⏳ {Math.ceil(timeUntilScrobble()!)}s
+				<span class={`${styles.label} ${styles.scrobbleCountdown}`}>
+					⏳ {Math.ceil(timeUntilScrobble()!).toString().padStart(2, '0')}s
 					<Show when={showPercent()}>
 						{' '}(@{scrobblePercent()}%)
 					</Show>
 				</span>
 			</Show>
-			<span class={styles.label}>{props.song()?.connector.label}</span>
+			<Show when={showConnector()}>
+				<span class={styles.label}>{props.song()?.connector.label}</span>
+			</Show>
 		</div>
 	);
 }
